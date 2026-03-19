@@ -5,8 +5,9 @@
 ---
 
 ## ESTADO ACTUAL DEL PROYECTO
-**Fase:** Prototipo en Godot 4 + Engine C++ iniciado  
-**Fecha de inicio:** Marzo 2026
+**Fase:** Engine C++ funcional con terreno, jugador y cámara  
+**Fecha de inicio:** Marzo 2026  
+**Última actualización:** 19/03/2026
 
 ---
 
@@ -14,72 +15,20 @@
 
 ### COMPLETADO ✅
 
-**Cámara orbital:**
-- Rotación con Q/E en pasos de 90°
-- Zoom con rueda del mouse
-- Suavidad con lerp
-- Siempre detrás del jugador
-- Angulo público para sincronizar movimiento
-
-**Jugador (CharacterBody3D):**
-- Movimiento relativo a la cámara
-- Sistema de stamina completo
-- Sistema de salud (0 a 3)
-  - Regeneración lenta tras 5 segundos sin daño
-  - Muerte recarga la escena
-- Sistema de ataque cuerpo a cuerpo
-  - Click izquierdo del mouse
-  - Raycast frente al jugador
-  - Rango 2.5 unidades
-  - Cooldown 0.6 segundos
-  - Daño 1.0 por golpe
-
-**Zombie (CharacterBody3D):**
-- Persecución directa al jugador (sin NavMesh)
-- Detección por distancia (15 unidades)
-- Deja de perseguir a más de 20 unidades
-- Se duerme a más de 40 unidades
-- Sistema de salud (3 golpes para morir)
-- Barra de salud Label3D con billboard
-  - Aparece al recibir daño
-  - Desaparece a los 3 segundos
-  - Verde → amarillo → rojo según salud
-- Daño al jugador con cooldown de 1.5 segundos
-- Grupo: "zombie"
-
-**Mundo procedural:**
-- Generación por chunks (32x32 unidades)
-- Render distance: 3 chunks en cada dirección (7x7 = 49 chunks)
-- HeightMapShape3D para colisión estable
-- FastNoiseLite con FBM (4 octavas)
+- Cámara orbital Q/E + zoom + lerp
+- Jugador con stamina, salud, ataque (raycast)
+- Zombie con IA básica por distancia, barra de salud
+- Mundo procedural por chunks (32x32), FastNoiseLite FBM
 - Colores por altura: agua, arena, pasto, tierra, nieve
-- Carga y descarga dinámica de chunks
-- Borrado diferido para evitar caídas al caminar
-
-**Spawn de zombies:**
-- Al generar cada chunk
-- 0 a 2 zombies por chunk
-- 30% de probabilidad por chunk
-- Sin spawn en chunk inicial (0,0)
-- Distancia mínima al jugador de 20 unidades
-- Spawn diferido con call_deferred
-- Persisten aunque el chunk se descargue
-- IA activa solo dentro de 60 unidades
-
-**Inventario:**
-- Grilla 5x4 = 20 slots
-- Se abre con Tab
-- Slots como Panel con TextureRect y Label
-- Sistema de apilado de items
-- Funciones: agregar_item, remover_item, tiene_item
-- Items de prueba funcionando (Piedra x5, Madera x3)
+- Carga/descarga dinámica de chunks
+- Spawn de zombies por chunk
+- Inventario grilla 5x4, apilado de items
 
 ### PENDIENTE EN GODOT ❌
-- Hotbar de 5 slots visible en pantalla
-- Items reales en el mundo para recoger
-- Sistema de loot en zombies al morir
+- Hotbar visible
+- Items reales y loot
 - Daño por caída
-- Sistema de construcción básico
+- Construcción básica
 - Compatibilidad con mando
 
 ---
@@ -88,36 +37,80 @@
 
 ### ENTORNO DE DESARROLLO ✅
 ```
-Compilador  → GCC 15.2.0 (MinGW-W64)
-IDE         → VS Code
-SDL3        → instalado en C:\SDL3
-GLAD        → instalado en C:\Hollow Earth\include y src
-OpenGL      → 3.3.0 NVIDIA 353.54 — confirmado funcionando
+Compilador  → GCC 15.2.0 (MinGW-W64) en C:\mingw64
+IDE         → VS Code + CMake Tools
+SDL3        → C:\SDL3
+GLAD        → C:\Hollow Earth\include\ y src\
+GLM         → C:\Hollow Earth\include\glm\
+FastNoiseLite → C:\Hollow Earth\include\FastNoiseLite.h
+OpenGL      → 3.3.0 NVIDIA 353.54 — confirmado
 CMake       → 4.3.0
 Git         → 2.53.0
 ```
 
-### COMPLETADO EN ENGINE ✅
-- Primer programa C++ compilado y ejecutado
-- Ventana SDL3 funcionando
-- Contexto OpenGL 3.3 creado
-- GLAD inicializado correctamente
-- Color de fondo verde renderizando (primer frame de Hollow Earth)
-- VSync activado
+### COMANDO DE BUILD
+```
+Botón Build en barra inferior de VS Code
+O: cmake --build build
+```
+
+### EJECUTAR
+```
+.\build\HollowEarth.exe
+```
+
+### ESTRUCTURA DEL PROYECTO
+```
+C:\Hollow Earth\
+├── main.cpp
+├── CMakeLists.txt
+├── build\              ← ejecutable compilado aquí
+├── src\
+│   ├── glad.c
+│   ├── shader.cpp
+│   ├── camara.cpp
+│   ├── terreno.cpp
+│   └── jugador.cpp
+└── include\
+    ├── glad\
+    ├── KHR\
+    ├── glm\
+    ├── FastNoiseLite.h
+    ├── shader.h
+    ├── camara.h
+    ├── terreno.h
+    └── jugador.h
+```
+
+### HITOS COMPLETADOS ✅
+1. Hola Mundo C++
+2. Ventana SDL3
+3. OpenGL 3.3 + GLAD inicializado
+4. Triángulo con shaders (vertex + fragment)
+5. Cubo 3D con matrices MVP
+6. Cámara orbital Q/E + zoom rueda del mouse
+7. Terreno procedural FastNoiseLite con colores por altura
+8. Código separado en archivos (shader/camara/terreno/jugador)
+9. CMake configurado con botón Build en VS Code
+10. Jugador (cubo amarillo) con gravedad y colisión con terreno
+11. Movimiento WASD relativo a la cámara
+12. Lerp suave de posición y ángulo de cámara
+13. Terreno aleatorio con semilla aleatoria (rand)
 
 ### PRÓXIMO PASO 🔄
-- Triángulo con OpenGL (shaders + VAO/VBO)
+- Sistema de chunks (terreno infinito)
+- Salto con espacio
 
 ### PENDIENTE EN ENGINE ❌
-- Triángulo con shaders
-- Sistema de cámara 3D
-- Carga de modelos
-- Sistema de chunks en C++
-- Generación procedural con FastNoise2
-- Sistema de físicas con Bullet
+- Sistema de chunks
+- Salto
+- Múltiples entidades (futuros zombies)
+- Shaders en archivos .glsl separados
+- Carga de modelos .gltf
 - Audio con OpenAL
 - Sistema de mods con Lua + sol2
 - IA con Python + pybind11
+- Bullet Physics
 
 ---
 
@@ -130,59 +123,37 @@ Git         → 2.53.0
 | Audio | OpenAL | Open source, coherente con GPL |
 | Scripting mods | Lua + sol2 | Más conocido, liviano |
 | IA avanzada | Python + pybind11 | Mejores librerías de ML |
-| Física | Bullet Physics | Open source, probado |
-| Ruido | FastNoise2 | Más rápido disponible |
+| Física | Bullet Physics (futuro) | Open source, probado |
+| Ruido | FastNoiseLite (ahora) / FastNoise2 (futuro) | Simple primero |
 | Ciudades | WFC + Prefabs | Híbrido calidad/infinito |
 | Licencia | GPL v3 | Libertad con reciprocidad |
 | Idioma código | Español | Equipo hispanohablante |
 | Extensiones | .he* propias | Control total del formato |
-
----
-
-## ESTRUCTURA DEL PROYECTO C++
-
-```
-C:\Hollow Earth\
-├── main.cpp          → entrada principal
-├── hollow_earth.exe  → ejecutable compilado
-├── SDL3.dll          → librería SDL3
-├── src\
-│   └── glad.c        → loader de OpenGL
-└── include\
-    ├── glad\
-    │   └── glad.h
-    └── KHR\
-        └── khrplatform.h
-
-Librerías externas:
-├── C:\SDL3\          → SDL3
-└── C:\mingw64\       → compilador GCC
-```
-
-## COMANDO DE COMPILACIÓN ACTUAL
-```
-g++ main.cpp src/glad.c -o hollow_earth.exe -I include -I C:\SDL3\include -L C:\SDL3\lib -lSDL3
-```
+| Build | CMake + MinGW | Estándar multiplataforma |
 
 ---
 
 ## NOTAS DE SESIÓN
 
-### Marzo 2026 — Sesión 1
-- Prototipo Godot funcional con terreno, jugador, zombie, inventario básico
-- Documento de diseño completo creado
-- Repositorio GitHub creado: github.com/Food2001/HollowEarth
-- Instalado: MinGW GCC 15.2.0, CMake 4.3.0, Git, SDL3, GLAD
+### 19/03/2026 — Sesión 1 y 2
+- Instalado entorno completo: MinGW, CMake, Git, SDL3, GLAD, GLM, FastNoiseLite
 - Primer programa C++ compilado
 - Ventana SDL3 + OpenGL 3.3 funcionando
-- Primer frame verde renderizado — Hollow Earth engine iniciado
+- Triángulo RGB con shaders
+- Cubo 3D girando con matrices MVP
+- Cámara orbital con lerp suave
+- Terreno procedural con colores por altura
+- Jugador con gravedad y colisión con terreno
+- Movimiento WASD relativo a cámara
+- Código organizado en archivos separados
+- CMake configurado
 
 ---
 
 ## CÓMO USAR ESTE ARCHIVO
 
 Antes de cada sesión con Claude, pasá ambos archivos:
-- HOLLOW_EARTH_DESIGN.md → contexto de diseño
-- HOLLOW_EARTH_PROGRESS.md → estado actual
+- `HOLLOW_EARTH_DESIGN.md` → contexto de diseño
+- `HOLLOW_EARTH_PROGRESS.md` → estado actual
 
 Claude los lee y retoma desde donde dejaste sin perder contexto.
