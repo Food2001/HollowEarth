@@ -35,7 +35,7 @@ El virus es tan antiguo que el sistema inmune humano nunca lo vio — sin defens
 
 ```
 Engine:          C++
-Rendering:       SDL2 + OpenGL
+Rendering:       SDL3 + OpenGL
 Física:          Bullet Physics
 Audio:           OpenAL
 Ruido:           FastNoise2
