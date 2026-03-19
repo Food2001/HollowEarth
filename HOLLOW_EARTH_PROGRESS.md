@@ -1,11 +1,12 @@
 # Hollow Earth — Registro de Progreso
 > Actualizar este archivo después de cada sesión de desarrollo
+> Desarrollado por: Lautaro ([@Food2001](https://github.com/Food2001)) + Claude (Anthropic)
 
 ---
 
 ## ESTADO ACTUAL DEL PROYECTO
-**Fase:** Prototipo en Godot 4 + Planificación del engine C++  
-**Fecha de inicio:** Marzo 2026  
+**Fase:** Prototipo en Godot 4 + Engine C++ iniciado  
+**Fecha de inicio:** Marzo 2026
 
 ---
 
@@ -23,9 +24,6 @@
 **Jugador (CharacterBody3D):**
 - Movimiento relativo a la cámara
 - Sistema de stamina completo
-  - Correr consume stamina
-  - Estado agotado con velocidad reducida
-  - Recuperación lenta
 - Sistema de salud (0 a 3)
   - Regeneración lenta tras 5 segundos sin daño
   - Muerte recarga la escena
@@ -74,47 +72,52 @@
 - Slots como Panel con TextureRect y Label
 - Sistema de apilado de items
 - Funciones: agregar_item, remover_item, tiene_item
-
-### EN PROGRESO 🔄
-- Items de prueba en inventario (test básico funcionando)
-- Ajuste visual del inventario
+- Items de prueba funcionando (Piedra x5, Madera x3)
 
 ### PENDIENTE EN GODOT ❌
 - Hotbar de 5 slots visible en pantalla
 - Items reales en el mundo para recoger
 - Sistema de loot en zombies al morir
-- Distribuciones de loot (lua equivalente)
 - Daño por caída
 - Sistema de construcción básico
-- Compatibilidad con mando (Input Actions ya preparadas)
+- Compatibilidad con mando
 
 ---
 
 ## ENGINE C++ — HOLLOW EARTH REAL
 
-### STACK DEFINIDO ✅
+### ENTORNO DE DESARROLLO ✅
 ```
-C++          → engine core
-SDL2         → ventana e input
-OpenGL       → rendering 3D
-OpenAL       → audio
-FastNoise2   → generación procedural
-Bullet       → física
-Lua + sol2   → sistema de mods
-Python + pybind11 → IA avanzada
-CMake        → compilación
+Compilador  → GCC 15.2.0 (MinGW-W64)
+IDE         → VS Code
+SDL3        → instalado en C:\SDL3
+GLAD        → instalado en C:\Hollow Earth\include y src
+OpenGL      → 3.3.0 NVIDIA 353.54 — confirmado funcionando
+CMake       → 4.3.0
+Git         → 2.53.0
 ```
 
-### HERRAMIENTAS INSTALADAS
-- [ ] MinGW (compilador GCC para Windows)
-- [ ] VS Code con extensión C/C++
-- [ ] CMake
-- [ ] Git configurado con repositorio HollowEarth
+### COMPLETADO EN ENGINE ✅
+- Primer programa C++ compilado y ejecutado
+- Ventana SDL3 funcionando
+- Contexto OpenGL 3.3 creado
+- GLAD inicializado correctamente
+- Color de fondo verde renderizando (primer frame de Hollow Earth)
+- VSync activado
 
-### PENDIENTE — ENGINE ❌
-- Todo — aún no iniciado
-- Primer objetivo: ventana SDL2 + OpenGL funcionando
-- Segundo objetivo: triángulo en pantalla (el "Hola Mundo" de OpenGL)
+### PRÓXIMO PASO 🔄
+- Triángulo con OpenGL (shaders + VAO/VBO)
+
+### PENDIENTE EN ENGINE ❌
+- Triángulo con shaders
+- Sistema de cámara 3D
+- Carga de modelos
+- Sistema de chunks en C++
+- Generación procedural con FastNoise2
+- Sistema de físicas con Bullet
+- Audio con OpenAL
+- Sistema de mods con Lua + sol2
+- IA con Python + pybind11
 
 ---
 
@@ -122,12 +125,13 @@ CMake        → compilación
 
 | Decisión | Elección | Razón |
 |----------|----------|-------|
-| Renderer | SDL2 + OpenGL | Liviano, compatible con hardware mínimo |
+| Renderer | SDL3 + OpenGL 3.3 | Liviano, compatible con hardware mínimo |
+| Loader OpenGL | GLAD | Más moderno que GLEW, sin DLL extra |
 | Audio | OpenAL | Open source, coherente con GPL |
-| Scripting mods | Lua + sol2 | Más conocido, liviano, comunidad PZ ya sabe |
+| Scripting mods | Lua + sol2 | Más conocido, liviano |
 | IA avanzada | Python + pybind11 | Mejores librerías de ML |
 | Física | Bullet Physics | Open source, probado |
-| Ruido | FastNoise2 | Más rápido disponible, SIMD |
+| Ruido | FastNoise2 | Más rápido disponible |
 | Ciudades | WFC + Prefabs | Híbrido calidad/infinito |
 | Licencia | GPL v3 | Libertad con reciprocidad |
 | Idioma código | Español | Equipo hispanohablante |
@@ -135,39 +139,43 @@ CMake        → compilación
 
 ---
 
-## SISTEMAS DISEÑADOS (pendientes de implementar)
+## ESTRUCTURA DEL PROYECTO C++
 
-- [x] Generación procedural de terreno
-- [x] Sistema de chunks
-- [x] Sistema de infectados con arquetipos
-- [x] Sistema de combate
-- [x] Ramas de armas separadas
-- [x] Artesanía de armas de fuego
-- [x] Profesiones y traits profundos
-- [x] Aptitudes finales (3 opciones)
-- [x] Especialista vs Comodín
-- [x] Sistema de salud física realista
-- [x] Modos de inicio configurables
-- [x] NPCs con IA por capas
-- [x] Sistema de facciones dinámicas
-- [x] Sistema de rumores
-- [x] Simulación offscreen durante sueño
-- [x] Deterioro del mundo con el tiempo
-- [x] Desastres naturales por bioma
-- [x] Ciclo día/noche y estaciones
-- [x] Sistema de mods Lua + Python
-- [x] Editor de mapas separado
-- [x] Logo de facción personalizable
+```
+C:\Hollow Earth\
+├── main.cpp          → entrada principal
+├── hollow_earth.exe  → ejecutable compilado
+├── SDL3.dll          → librería SDL3
+├── src\
+│   └── glad.c        → loader de OpenGL
+└── include\
+    ├── glad\
+    │   └── glad.h
+    └── KHR\
+        └── khrplatform.h
+
+Librerías externas:
+├── C:\SDL3\          → SDL3
+└── C:\mingw64\       → compilador GCC
+```
+
+## COMANDO DE COMPILACIÓN ACTUAL
+```
+g++ main.cpp src/glad.c -o hollow_earth.exe -I include -I C:\SDL3\include -L C:\SDL3\lib -lSDL3
+```
 
 ---
 
 ## NOTAS DE SESIÓN
 
-### Marzo 2026 — Sesión inicial
+### Marzo 2026 — Sesión 1
 - Prototipo Godot funcional con terreno, jugador, zombie, inventario básico
 - Documento de diseño completo creado
-- Repositorio GitHub creado
-- Próximo paso: instalar MinGW y hacer primer programa C++
+- Repositorio GitHub creado: github.com/Food2001/HollowEarth
+- Instalado: MinGW GCC 15.2.0, CMake 4.3.0, Git, SDL3, GLAD
+- Primer programa C++ compilado
+- Ventana SDL3 + OpenGL 3.3 funcionando
+- Primer frame verde renderizado — Hollow Earth engine iniciado
 
 ---
 
@@ -178,4 +186,3 @@ Antes de cada sesión con Claude, pasá ambos archivos:
 - HOLLOW_EARTH_PROGRESS.md → estado actual
 
 Claude los lee y retoma desde donde dejaste sin perder contexto.
-
